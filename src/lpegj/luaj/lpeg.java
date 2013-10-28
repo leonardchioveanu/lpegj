@@ -1,12 +1,24 @@
 package lpegj.luaj;
 
-import lpegj.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import lpegj.CaptureFunction;
+import lpegj.FoldFunction;
+import lpegj.MatcherResult;
+import lpegj.Pattern;
+import lpegj.RuntimeMatcher;
+import lpegj.Table;
+
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
-
-import java.util.*;
 
 class LuaMap implements Map {
     LuaTable tab;
@@ -252,7 +264,8 @@ public class lpeg extends VarArgFunction {
         } else return null;
     }
 
-    void initmeta() {
+    void initmeta(LuaValue env) {
+    	
         pattmeta = tableOf();
         pattmeta.set("__index", env.get("lpeg"));
         pattmeta.set("__add", env.get("lpeg").get("plus"));
@@ -265,12 +278,13 @@ public class lpeg extends VarArgFunction {
     }
 
     public Varargs invoke(Varargs args) {
+    	
         switch (opcode) {
             case 0: {
                 LuaValue t = tableOf();
                 this.bind(t, lpeg.class, lpeg.functions, 1);
-                env.set("lpeg", t);
-                initmeta();
+                t.set("lpeg", t);
+                initmeta(t);
                 return t;
             }
             case MATCH: {
