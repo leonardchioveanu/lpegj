@@ -226,9 +226,6 @@ public class lpeg extends VarArgFunction {
 
     static LuaValue pattmeta;
 
-    public lpeg() {
-    }
-
     Pattern pattP(LuaValue arg) {
         if (arg.isuserdata(Pattern.class))
             return (Pattern) arg.touserdata(Pattern.class);
